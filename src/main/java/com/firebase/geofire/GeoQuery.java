@@ -111,7 +111,7 @@ public class GeoQuery {
         return GeoUtils.distance(location, center) <= this.radius;
     }
 
-    private void updateLocationInfo(final String key, final GeoLocation location) {
+    private void updateLocationInfo(final String key, final GeoLocation location, final Date lastUpdate) {
         LocationInfo oldInfo = this.locationInfos.get(key);
         boolean isNew = (oldInfo == null);
         boolean changedLocation = (oldInfo != null && !oldInfo.location.equals(location));
@@ -123,7 +123,7 @@ public class GeoQuery {
                 this.geoFire.raiseEvent(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onKeyEntered(key, location);
+                        listener.onKeyEntered(key, location, lastUpdate);
                     }
                 });
             }
@@ -132,7 +132,7 @@ public class GeoQuery {
                 this.geoFire.raiseEvent(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onKeyMoved(key, location);
+                        listener.onKeyMoved(key, location, lastUpdate);
                     }
                 });
             }
@@ -141,7 +141,7 @@ public class GeoQuery {
                 this.geoFire.raiseEvent(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onKeyExited(key);
+                        listener.onKeyExited(key, lastUpdate);
                     }
                 });
             }
@@ -242,7 +242,7 @@ public class GeoQuery {
         }
         for(Map.Entry<String, LocationInfo> info: this.locationInfos.entrySet()) {
             LocationInfo oldLocationInfo = info.getValue();
-            this.updateLocationInfo(info.getKey(), oldLocationInfo.location);
+            this.updateLocationInfo(info.getKey(), oldLocationInfo.location, null);
         }
         // remove locations that are not part of the geo query anymore
         Iterator<Map.Entry<String, LocationInfo>> it = this.locationInfos.entrySet().iterator();
@@ -259,7 +259,8 @@ public class GeoQuery {
     private void childAdded(DataSnapshot dataSnapshot) {
         GeoLocation location = GeoFire.getLocationValue(dataSnapshot);
         if (location != null) {
-            this.updateLocationInfo(dataSnapshot.getKey(), location);
+            Date lastUpdate = GeoFire.getTimeValue(dataSnapshot);
+            this.updateLocationInfo(dataSnapshot.getKey(), location, lastUpdate);
         } else {
             // throw an error in future?
         }
@@ -268,7 +269,8 @@ public class GeoQuery {
     private void childChanged(DataSnapshot dataSnapshot) {
         GeoLocation location = GeoFire.getLocationValue(dataSnapshot);
         if (location != null) {
-            this.updateLocationInfo(dataSnapshot.getKey(), location);
+            Date lastUpdate = GeoFire.getTimeValue(dataSnapshot);
+            this.updateLocationInfo(dataSnapshot.getKey(), location, lastUpdate);
         } else {
             // throw an error in future?
         }
@@ -280,7 +282,7 @@ public class GeoQuery {
         if (info != null) {
             this.geoFire.getDatabaseRefForKey(key).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
+                public void onDataChange(final DataSnapshot dataSnapshot) {
                     synchronized(GeoQuery.this) {
                         GeoLocation location = GeoFire.getLocationValue(dataSnapshot);
                         GeoHash hash = (location != null) ? new GeoHash(location) : null;
@@ -292,7 +294,8 @@ public class GeoQuery {
                                     GeoQuery.this.geoFire.raiseEvent(new Runnable() {
                                         @Override
                                         public void run() {
-                                            listener.onKeyExited(key);
+                                            Date lastUpdate = GeoFire.getTimeValue(dataSnapshot);
+                                            listener.onKeyExited(key, lastUpdate);
                                         }
                                     });
                                 }
@@ -331,7 +334,7 @@ public class GeoQuery {
                     this.geoFire.raiseEvent(new Runnable() {
                         @Override
                         public void run() {
-                            listener.onKeyEntered(key, info.location);
+                            listener.onKeyEntered(key, info.location, null);
                         }
                     });
                 }

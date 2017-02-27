@@ -30,6 +30,8 @@ package com.firebase.geofire;
 
 import com.google.firebase.database.DatabaseError;
 
+import java.util.Date;
+
 /**
  * GeoQuery notifies listeners with this interface about keys that entered, exited, or moved within the query.
  */
@@ -43,16 +45,18 @@ public interface GeoQueryEventListener {
      *
      * @param key The key that entered the search area
      * @param location The location for this key as a GeoLocation object
+     * @param lastUpdate The Date for the key
      */
-    public void onKeyEntered(String key, GeoLocation location);
+    public void onKeyEntered(String key, GeoLocation location, Date lastUpdate);
 
     /**
      * Called if a key exited the search area of the GeoQuery. This is method is only called if onKeyEntered was called
      * for the key.
      *
      * @param key The key that exited the search area
+     * @param lastUpdate The Date for the key
      */
-    public void onKeyExited(String key);
+    public void onKeyExited(String key, Date lastUpdate);
 
     /**
      * Called if a key moved within the search area.
@@ -61,8 +65,9 @@ public interface GeoQueryEventListener {
      *
      * @param key The key that moved within the search area
      * @param location The location for this key as a GeoLocation object
+     * @param lastUpdate The Date for the key
      */
-    public void onKeyMoved(String key, GeoLocation location);
+    public void onKeyMoved(String key, GeoLocation location, Date lastUpdate);
 
     /**
      * Called once all initial GeoFire data has been loaded and the relevant events have been fired for this query.

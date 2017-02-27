@@ -110,6 +110,21 @@ public class GeoFire {
         }
     }
 
+    static Date getTimeValue(DataSnapshot dataSnapshot) {
+        try {
+            GenericTypeIndicator<Map<String, Object>> typeIndicator = new GenericTypeIndicator<Map<String, Object>>() {};
+            Map<String, Object> data = dataSnapshot.getValue(typeIndicator);
+            double t = (double)data.get("t");
+
+            return new Date((long)t);
+        } catch (NullPointerException e) {
+            return null;
+        } catch (ClassCastException e) {
+            return null;
+        }
+    }
+
+
     private final DatabaseReference databaseReference;
     private final EventRaiser eventRaiser;
 

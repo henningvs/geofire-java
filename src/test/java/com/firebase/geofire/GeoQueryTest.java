@@ -222,18 +222,18 @@ public class GeoQueryTest extends RealDataTest {
         final Semaphore semaphore = new Semaphore(0);
         query.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
-            public void onKeyEntered(String key, GeoLocation location) {
+            public void onKeyEntered(String key, GeoLocation location, Date lastUpdate) {
                 if (done[0]) {
                     failed[0] = true;
                 }
             }
 
             @Override
-            public void onKeyExited(String key) {
+            public void onKeyExited(String key, Date lastUpdate) {
             }
 
             @Override
-            public void onKeyMoved(String key, GeoLocation location) {
+            public void onKeyMoved(String key, GeoLocation location, Date lastUpdate) {
             }
 
             @Override
@@ -268,15 +268,15 @@ public class GeoQueryTest extends RealDataTest {
         final Semaphore semaphore = new Semaphore(0);
         query.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
-            public void onKeyEntered(String key, GeoLocation location) {
+            public void onKeyEntered(String key, GeoLocation location, Date lastUpdate) {
             }
 
             @Override
-            public void onKeyExited(String key) {
+            public void onKeyExited(String key, Date lastUpdate) {
             }
 
             @Override
-            public void onKeyMoved(String key, GeoLocation location) {
+            public void onKeyMoved(String key, GeoLocation location, Date lastUpdate) {
             }
 
             @Override
@@ -293,15 +293,15 @@ public class GeoQueryTest extends RealDataTest {
 
         query.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
-            public void onKeyEntered(String key, GeoLocation location) {
+            public void onKeyEntered(String key, GeoLocation location, Date lastUpdate) {
             }
 
             @Override
-            public void onKeyExited(String key) {
+            public void onKeyExited(String key, Date lastUpdate) {
             }
 
             @Override
-            public void onKeyMoved(String key, GeoLocation location) {
+            public void onKeyMoved(String key, GeoLocation location, Date lastUpdate) {
             }
 
             @Override
@@ -331,18 +331,18 @@ public class GeoQueryTest extends RealDataTest {
         final int[] readyCount = new int[1];
         query.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
-            public void onKeyEntered(String key, GeoLocation location) {
+            public void onKeyEntered(String key, GeoLocation location, Date lastUpdate) {
                 if (key.equals("0")) {
                     done[0] = true;
                 }
             }
 
             @Override
-            public void onKeyExited(String key) {
+            public void onKeyExited(String key, Date lastUpdate) {
             }
 
             @Override
-            public void onKeyMoved(String key, GeoLocation location) {
+            public void onKeyMoved(String key, GeoLocation location, Date lastUpdate) {
             }
 
             @Override

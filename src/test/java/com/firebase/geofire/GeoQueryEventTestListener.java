@@ -2,6 +2,8 @@ package com.firebase.geofire;
 
 import com.google.firebase.database.DatabaseError;
 
+import java.util.Date;
+
 public class GeoQueryEventTestListener extends TestListener implements GeoQueryEventListener {
 
     private final boolean recordEntered;
@@ -31,21 +33,21 @@ public class GeoQueryEventTestListener extends TestListener implements GeoQueryE
     }
 
     @Override
-    public void onKeyEntered(String key, GeoLocation location) {
+    public void onKeyEntered(String key, GeoLocation location, Date lastUpdate) {
         if (recordEntered) {
             this.addEvent(keyEntered(key, location.latitude, location.longitude));
         }
     }
 
     @Override
-    public void onKeyExited(String key) {
+    public void onKeyExited(String key, Date lastUpdate) {
         if (recordExited) {
             this.addEvent(keyExited(key));
         }
     }
 
     @Override
-    public void onKeyMoved(String key, GeoLocation location) {
+    public void onKeyMoved(String key, GeoLocation location, Date lastUpdate) {
         if (recordMoved) {
             this.addEvent(keyMoved(key, location.latitude, location.longitude));
         }
